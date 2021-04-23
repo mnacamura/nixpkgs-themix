@@ -3,7 +3,7 @@
 ## Update packages
 
 - [ ] themix-gui
-- [ ] themix-import-images
+- [x] themix-import-images
 - [x] themix-theme-oomox: 1.12 -> 1.12.r2
 - [ ] themix-icons-papirus
 
