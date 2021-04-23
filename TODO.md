@@ -5,7 +5,7 @@
 - [ ] themix-gui
 - [x] themix-import-images
 - [x] themix-theme-oomox: 1.12 -> 1.12.r2
-- [ ] themix-icons-papirus
+- [x] themix-icons-papirus
 
 ## Add packages
 
