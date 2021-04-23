@@ -3,14 +3,13 @@
 ## Update packages
 
 - [ ] themix-gui
-    - [ ] Move `plugins/import_random` to its own package
 - [ ] themix-import-images
 - [x] themix-theme-oomox: 1.12 -> 1.12.r2
 - [ ] themix-icons-papirus
 
 ## Add packages
 
-- [ ] themix-import-random
+- [x] themix-import-random
 - [ ] themix-import-xresources
 - [ ] themix-theme-arc
 - [ ] themix-theme-materia
