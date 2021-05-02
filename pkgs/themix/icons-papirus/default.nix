@@ -1,4 +1,8 @@
-{ stdenv, themix-gui, python3, papirus-icon-theme }:
+{ stdenv, themix-gui, python3, papirus-icon-theme
+, runCommand
+}:
+
+let self =
 
 stdenv.mkDerivation rec {
   pname = "themix-icons-papirus";
@@ -40,7 +44,19 @@ stdenv.mkDerivation rec {
 
   installTargets = "install_icons_papirus";
 
+  passthru.generate = { preset, name }:
+  runCommand "${self.name}-generated" { } ''
+    export HOME=.
+    ${self}/opt/oomox/plugins/icons_papirus/change_color.sh \
+        --output "${name}" \
+        --target-dir $out/share/icons \
+        ${preset}
+  '';
+
+
   meta = themix-gui.meta // {
     description = "Papirus icons plugin for Themix GUI designer";
   };
-}
+};
+
+in self
