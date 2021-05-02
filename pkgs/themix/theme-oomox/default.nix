@@ -1,7 +1,10 @@
 { lib, stdenv, fetchFromGitHub, python3, bc, sassc, glib, libxml2, gdk-pixbuf
 , gtk-engine-murrine
 , fetchpatch
+, runCommand, librsvg
 }:
+
+let self =
 
 stdenv.mkDerivation rec {
   pname = "themix-theme-oomox";
@@ -57,6 +60,19 @@ stdenv.mkDerivation rec {
     cp -r __pycache__ $out/opt/oomox/plugins/theme_oomox/
   '';
 
+  passthru.generate = { preset, name, hidpi ? false, makeOpts ? "gtk320" }:
+  runCommand "${self.name}-generated" {
+    buildInputs = [ librsvg bc sassc ];
+  } ''
+    export HOME=.
+    ${self}/opt/oomox/plugins/theme_oomox/change_color.sh \
+        --output "${name}" \
+        --target-dir $out/share/themes \
+        ${if hidpi then "--hidpi true" else ""} \
+        --make-opts ${makeOpts} \
+        ${preset}
+  '';
+
   meta = with lib; {
     description = "Oomox theme plugin for Themix GUI designer";
     homepage = "https://github.com/themix-project/oomox";
@@ -64,4 +80,6 @@ stdenv.mkDerivation rec {
     maintainers = with maintainers; [ mnacamura ];
     platforms = platforms.linux;
   };
-}
+};
+
+in self
