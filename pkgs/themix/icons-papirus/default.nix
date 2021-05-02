@@ -2,10 +2,14 @@
 
 stdenv.mkDerivation rec {
   pname = "themix-icons-papirus";
-
   inherit (themix-gui) version src;
 
-  patches = [ ./writable.patch ];
+  patches = [
+    # themix-gui generates customized theme by `cp -r` theme skeleton to
+    # working directory and modifying it. As the skeleton is in nix store and
+    # not writable, the copied one is not modifiable.
+    ./writable.patch
+  ];
 
   postPatch = ''
     patchShebangs plugins/icons_papirus
@@ -13,7 +17,9 @@ stdenv.mkDerivation rec {
     # No need to remove .git*
     sed -i Makefile -e '/$(RM) -r .\+\.git\*/d'
 
-    cp -rT "${papirus-icon-theme.src}" plugins/icons_papirus/papirus-icon-theme
+    # Fix original Papirus icon path
+    sed -i plugins/icons_papirus/change_color.sh \
+        -e 's@$root/papirus-icon-theme@${papirus-icon-theme.src}@'
   '';
 
   nativeBuildInputs = [ python3 ];
@@ -24,7 +30,8 @@ stdenv.mkDerivation rec {
     runHook postBuild
   '';
 
-  doCheck = false; 
+  # No tests
+  doCheck = false;
 
   installFlags = [ "DESTDIR=$(out)" "PREFIX=" ];
 

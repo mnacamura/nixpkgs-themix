@@ -1,5 +1,5 @@
-{ lib, stdenv, fetchFromGitHub, gettext, python3
-, wrapGAppsHook, gtk3, gobject-introspection, hicolor-icon-theme
+{ lib, stdenv, fetchFromGitHub, wrapGAppsHook, python3, gettext
+, gtk3, gobject-introspection, hicolor-icon-theme
 }:
 
 stdenv.mkDerivation rec {
@@ -17,19 +17,20 @@ stdenv.mkDerivation rec {
 
   postPatch = ''
     patchShebangs .
-    for path in packaging/bin/*; do
-        sed -i "$path" -e "s@\(/opt/oomox/\)@$out\1@"
-        sed -i "$path" -e "s@exec \(python3\)@exec ${python3}/bin/\1@"
+
+    for bin in packaging/bin/*; do
+        sed -i "$bin" -e "s@\(/opt/oomox/\)@$out\1@"
+        sed -i "$bin" -e "s@exec \(python3\)@exec ${python3}/bin/\1@"
     done
 
-    # No need to remove .git*
+    # No need to remove .git* in git submodules
     sed -i Makefile -e '/$(RM) -r .\+\.git\*/d'
   '';
 
   nativeBuildInputs = [ wrapGAppsHook ];
 
-  buildInputs = [ gettext gtk3 gobject-introspection hicolor-icon-theme python3 ] ++
-  (with python3.pkgs; [ pygobject3 ]);
+  buildInputs = [ python3 gettext gtk3 gobject-introspection hicolor-icon-theme ]
+    ++ (with python3.pkgs; [ pygobject3 ]);
 
   buildPhase = ''
     runHook preBuild
@@ -37,7 +38,8 @@ stdenv.mkDerivation rec {
     runHook postBuild
   '';
 
-  doCheck = false; 
+  # No tests
+  doCheck = false;
 
   installFlags = [ "DESTDIR=$(out)" "PREFIX=" ];
 
@@ -53,10 +55,10 @@ stdenv.mkDerivation rec {
   '';
 
   meta = with lib; {
-    inherit (src.meta) homepage;
-    description = "Plugin-based theme designer GUI for desktop environments";
-    platforms = platforms.all;
+    description = "Plugin-based theme designer GUI for desktop/console environments";
+    homepage = "https://github.com/themix-project/oomox";
+    license = licenses.gpl3Only;
     maintainers = with maintainers; [ mnacamura ];
-    license = licenses.gpl3;
+    platforms = platforms.linux;
   };
 }

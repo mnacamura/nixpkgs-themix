@@ -5,7 +5,7 @@
 
 stdenv.mkDerivation rec {
   pname = "themix-theme-oomox";
-  version = "1.12.r2";
+  version = "1.12.r2.g0db28619";
 
   src = fetchFromGitHub {
     owner = "themix-project";
@@ -15,21 +15,22 @@ stdenv.mkDerivation rec {
   };
 
   patches = [
-    (let
-       rev = "b695fcb8d303f804c53d85ad7d6396b0cd2b29b4";
+     (fetchpatch {
+       url = "https://github.com/themix-project/oomox-gtk-theme/commit/b695fcb8d303f804c53d85ad7d6396b0cd2b29b4.patch";
        sha256 = "0696bvj8pddf34pnljkxbnl2za6ah80a5rmjj89qjs122xg50n0d";
-     in
-     fetchpatch {
-       url = "https://github.com/themix-project/oomox-gtk-theme/commit/${rev}.patch";
-       inherit sha256;
      })
+
+    # themix-gui generates customized theme by `cp -r` theme skeleton to
+    # working directory and modifying it. As the skeleton is in nix store and
+    # not writable, the copied one is not modifiable.
     ./writable.patch
   ];
 
   postPatch = ''
     patchShebangs .
-    for path in packaging/bin/*; do
-        sed -i "$path" -e "s@\(/opt/oomox/\)@$out\1@"
+
+    for bin in packaging/bin/*; do
+        sed -i "$bin" -e "s@\(/opt/oomox/\)@$out\1@"
     done
   '';
 
@@ -45,19 +46,22 @@ stdenv.mkDerivation rec {
     runHook postBuild
   '';
 
-  doCheck = false; 
+  # No tests
+  doCheck = false;
 
-  installFlags = [ "-f Makefile_oomox_plugin" "DESTDIR=$(out)" "PREFIX=" ];
+  makefile = "Makefile_oomox_plugin";
+
+  installFlags = [ "DESTDIR=$(out)" "PREFIX=" ];
 
   postInstall = ''
-    cp -r __pycache__ "$out/opt/oomox/plugins/theme_oomox"/
+    cp -r __pycache__ $out/opt/oomox/plugins/theme_oomox/
   '';
 
   meta = with lib; {
-    inherit (src.meta) homepage;
     description = "Oomox theme plugin for Themix GUI designer";
-    platforms = platforms.all;
+    homepage = "https://github.com/themix-project/oomox";
+    license = licenses.gpl3Only;
     maintainers = with maintainers; [ mnacamura ];
-    license = licenses.gpl3;
+    platforms = platforms.linux;
   };
 }
