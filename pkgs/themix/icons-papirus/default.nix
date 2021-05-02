@@ -9,6 +9,9 @@ stdenv.mkDerivation rec {
     # working directory and modifying it. As the skeleton is in nix store and
     # not writable, the copied one is not modifiable.
     ./writable.patch
+
+    # Enable change_color.sh to have option -t|--target-dir
+    ./destpathroot.patch
   ];
 
   postPatch = ''
