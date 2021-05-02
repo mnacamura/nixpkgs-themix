@@ -1,7 +1,7 @@
-{ lib, stdenv, fetchFromGitHub, python3, bc, sassc, glib, libxml2, gdk-pixbuf
+{ lib, stdenv, fetchFromGitHub, python3, bc, sassc, glib, librsvg, gdk-pixbuf
 , gtk-engine-murrine
 , fetchpatch
-, runCommand, librsvg
+, runCommand
 }:
 
 let self =
@@ -39,7 +39,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [ python3 ];
 
-  propagatedBuildInputs = [ bc sassc glib libxml2 gdk-pixbuf ];
+  propagatedBuildInputs = [ bc sassc glib librsvg gdk-pixbuf ];
 
   propagatedUserEnvPkgs = [ gtk-engine-murrine ];
 
