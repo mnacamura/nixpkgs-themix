@@ -1,5 +1,6 @@
 { lib, stdenv, fetchFromGitHub, python3, bc, sassc, glib, librsvg, gdk-pixbuf
 , gtk-engine-murrine
+, makeFontsConf, freefont_ttf
 , fetchpatch
 , runCommand
 }:
@@ -63,6 +64,10 @@ stdenv.mkDerivation rec {
   passthru.generate = { preset, name, hidpi ? false, makeOpts ? "gtk320" }:
   runCommand "${self.name}-generated" {
     buildInputs = [ librsvg bc sassc ];
+    # Fontconfig error: Cannot load default config file
+    FONTCONFIG_FILE = makeFontsConf {
+      fontDirectories = [ freefont_ttf ];
+    };
   } ''
     export HOME=.
     ${self}/opt/oomox/plugins/theme_oomox/change_color.sh \
