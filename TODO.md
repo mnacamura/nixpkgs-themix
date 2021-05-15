@@ -23,5 +23,4 @@
 
 ## Misc.
 
-- [ ] Make python packages private
 - [ ] Add README
