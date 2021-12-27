@@ -1,27 +1,9 @@
-self: super:
-
-{
-  python3 = super.python3.override ({
-    packageOverrides = pyself: pysuper:
-    {
-      colorthief = pyself.callPackage ./pkgs/python/colorthief {};
-      colorz = pyself.callPackage ./pkgs/python/colorz {};
-      haishoku = pyself.callPackage ./pkgs/python/haishoku {};
-    };
-  });
-
-  themix-gui = self.callPackage ./pkgs/themix/gui {
-    unwrapped = self.callPackage ./pkgs/themix/gui/unwrapped.nix {};
-    plugins = with self.themixPlugins; [
-      import-images
-      theme-oomox
-      icons-papirus
-    ];
-  };
-
-  themixPlugins = {
-    import-images = self.callPackage ./pkgs/themix/import-images {};
-    theme-oomox = self.callPackage ./pkgs/themix/theme-oomox {};
-    icons-papirus = self.callPackage ./pkgs/themix/icons-papirus {};
-  };
-}
+(import (
+  let
+    lock = builtins.fromJSON (builtins.readFile ./flake.lock);
+  in fetchTarball {
+    url = "https://github.com/edolstra/flake-compat/archive/${lock.nodes.flake-compat.locked.rev}.tar.gz";
+    sha256 = lock.nodes.flake-compat.locked.narHash; }
+) {
+  src =  ./.;
+}).defaultNix
