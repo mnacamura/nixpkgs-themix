@@ -9,21 +9,16 @@ let self =
 
 stdenv.mkDerivation rec {
   pname = "themix-theme-oomox";
-  version = "1.12.r2.g0db28619";
+  version = "1.12.4";
 
   src = fetchFromGitHub {
     owner = "themix-project";
     repo = "oomox-gtk-theme";
-    rev = "e0d729510791b4797e80610b73b5beea07673b10";
-    sha256 = "1i0pj3hwpxcrwrx1y1yf9xxp38zcaljh7f8na3z3k77f1pldch27";
+    rev = version;
+    hash = "sha256-X7ZtoaxuBeXbUWTsVVeyeAlgmmr12pic6T9A4yM+b60=";
   };
 
   patches = [
-     (fetchpatch {
-       url = "https://github.com/themix-project/oomox-gtk-theme/commit/b695fcb8d303f804c53d85ad7d6396b0cd2b29b4.patch";
-       sha256 = "0696bvj8pddf34pnljkxbnl2za6ah80a5rmjj89qjs122xg50n0d";
-     })
-
     # themix-gui generates customized theme by `cp -r` theme skeleton to
     # working directory and modifying it. As the skeleton is in nix store and
     # not writable, the copied one is not modifiable.
