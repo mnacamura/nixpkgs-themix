@@ -1,8 +1,8 @@
 diff --git a/plugins/icons_papirus/change_color.sh b/plugins/icons_papirus/change_color.sh
-index ecbc1e6a..b286fa0c 100755
+index 9c4ecf57..d35e599a 100755
 --- a/plugins/icons_papirus/change_color.sh
 +++ b/plugins/icons_papirus/change_color.sh
-@@ -114,6 +114,7 @@ dark_stroke_fallback="$(darker "$ICONS_COLOR" 56)"
+@@ -118,6 +118,7 @@ dark_stroke_fallback="$(darker "$ICONS_COLOR" 56)"
  
  echo ":: Copying theme template..."
  cp -R "$root/papirus-icon-theme/Papirus" "$tmp_dir/"
