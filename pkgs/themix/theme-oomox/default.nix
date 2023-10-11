@@ -23,6 +23,27 @@ stdenv.mkDerivation rec {
     # working directory and modifying it. As the skeleton is in nix store and
     # not writable, the copied one is not modifiable.
     ./writable.patch
+
+    # This commit causes an error:
+    #     Error loading plugin "theme_oomox"
+    #     /nix/store/x2qlm51cf1r3zigv6r9zyz420jsnzn7n-themix-gui-1.15.1-oomox-root/opt/oomox/plugins/theme_oomox:
+    #     type.__new__() takes exactly 3 arguments (0 given)
+    #     
+    #     Traceback (most recent call last):
+    #       File "/nix/store/qi3xs1hg46aaq5xqpyrijg25n8w724a5-themix-gui-1.15.1-with-plugins/opt/oomox/oomox_gui/plugin_loader.py", line 89, in init_plugins
+    #         cls.load_plugin(plugin_name, plugin_path)
+    #       File "/nix/store/qi3xs1hg46aaq5xqpyrijg25n8w724a5-themix-gui-1.15.1-with-plugins/opt/oomox/oomox_gui/plugin_loader.py", line 58, in load_plugin
+    #         plugin_module = get_plugin_module(
+    #       File "/nix/store/qi3xs1hg46aaq5xqpyrijg25n8w724a5-themix-gui-1.15.1-with-plugins/opt/oomox/oomox_gui/helpers.py", line 25, in get_plugin_module
+    #         spec.loader.exec_module(module)
+    #       File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+    #       File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+    #       File "/nix/store/x2qlm51cf1r3zigv6r9zyz420jsnzn7n-themix-gui-1.15.1-oomox-root/opt/oomox/plugins/theme_oomox/oomox_plugin.py", line 24, in <module>
+    #         class OomoxThemeExportDialog(CommonGtkThemeExportDialog):
+    #       File "/nix/store/x2qlm51cf1r3zigv6r9zyz420jsnzn7n-themix-gui-1.15.1-oomox-root/opt/oomox/plugins/theme_oomox/oomox_plugin.py", line 25, in OomoxThemeExportDialog
+    #         OPTIONS = OomoxThemeExportDialogOptions()
+    #     TypeError: type.__new__() takes exactly 3 arguments (0 given)
+    ./revert-cff6cda7.patch
   ];
 
   postPatch = ''
