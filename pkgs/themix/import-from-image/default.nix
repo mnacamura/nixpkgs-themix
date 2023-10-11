@@ -1,7 +1,7 @@
 { lib, stdenv, themix-gui, python3 }:
 
 stdenv.mkDerivation rec {
-  pname = "themix-import-images";
+  pname = "themix-import-from-image";
 
   inherit (themix-gui) version src;
 
@@ -9,7 +9,7 @@ stdenv.mkDerivation rec {
 
   buildPhase = ''
     runHook preBuild
-    python -O -m compileall plugins/import_pil
+    python -O -m compileall plugins/import_from_image
     runHook postBuild
   '';
 
